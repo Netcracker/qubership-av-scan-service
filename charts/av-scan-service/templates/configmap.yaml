@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clamav-config
+  labels:
+    app.kubernetes.io/component: backend
+    {{- include "av-scan-service.labels" . | nindent 4 }}
+data:
+  clamd.conf: |
+    LogTime yes
+    LogClean yes
+    LogSyslog no
+    LogVerbose yes
+    DatabaseDirectory /var/lib/clamav
+    TCPSocket 3310
+    Foreground yes
+  {{- if .Values.clamav.privateMirror }}
+  freshclam.conf: |
+    LogTime yes
+    NotifyClamd /etc/clamav/clamd.conf
+    Checks {{ .Values.clamav.checks }}
+    LogSyslog no
+    DatabaseOwner clam
+    PrivateMirror {{ .Values.clamav.privateMirror }}
+    {{- range $url := .Values.clamav.databaseCustomURL }}
+    DatabaseCustomURL {{ $url }}
+    {{- end }}
+  {{ end }}

@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "av-scan-service.fullname" . }}
+  labels:
+    app.kubernetes.io/component: backend
+    {{- include "av-scan-service.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "av-scan-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "av-scan-service.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.clamav.privateMirror }}
+      initContainers:
+        - name: freshclam-init-db
+          securityContext:
+            {{- include "clamav.securityContext" . | nindent 8 }}
+          image: {{ include "clamav.image" . }}
+          command: ["freshclam"]
+          imagePullPolicy: Always
+          resources:
+            {{- toYaml .Values.clamav.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/clamav
+              name: config-volume
+            - mountPath: /var/lib/clamav/
+              name: db-volume
+      {{- end }}
+      containers:
+        - name: av-scan-service
+          securityContext:
+            {{- include "avScanService.securityContext" . | nindent 6 }}
+          command:
+            - ./av-scan-service
+            {{- if .Values.tls.enabled }}
+            - --certfile=/certs/tls.crt
+            - --keyfile=/certs/tls.key
+            {{- end }}
+          image: {{ include "antivirus.image" . }}
+          imagePullPolicy: Always
+          resources:
+            {{- toYaml .Values.avScanService.resources | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- if .Values.avScanService.livenessProbe }}
+          livenessProbe: {{ include "av-scan-service.livenessProbe" . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.avScanService.readinessProbe }}
+          readinessProbe: {{ include "av-scan-service.readinessProbe" . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.tls.enabled }}
+            - readOnly: true
+              mountPath: /certs
+              name: av-scan-service-tls
+            {{- end }}
+        - name: clamd
+          securityContext:
+            {{- include "clamav.securityContext" . | nindent 6 }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              trap "echo trapped signal, continuing; sleep infinity" SIGTERM SIGINT
+              {{- if .Values.clamav.privateMirror }}
+              (clamd; echo "CLAMD EXITED") &
+              freshclam -d --stdout --foreground=true
+              {{- else }}
+              clamd
+              {{- end }}
+          image: {{ include "clamav.image" . }}
+          imagePullPolicy: Always
+          resources:
+            {{- toYaml .Values.clamav.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/clamav
+              name: config-volume
+            {{- if .Values.clamav.privateMirror }}
+            - mountPath: /var/lib/clamav/
+              name: db-volume
+            {{- end }}
+          {{- if .Values.clamav.livenessProbe }}
+          livenessProbe: {{ toYaml .Values.clamav.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.clamav.readinessProbe }}
+          readinessProbe: {{ toYaml .Values.clamav.readinessProbe | nindent 12 }}
+          {{- end }}
+      volumes:
+      - name: config-volume
+        configMap:
+          name: clamav-config
+      {{- if .Values.clamav.privateMirror }}
+      - name: db-volume
+        emptyDir:
+          sizeLimit: 500Mi
+      {{- end }}
+      {{- if .Values.tls.enabled }}
+      - name: av-scan-service-tls
+        secret:
+          secretName: {{ .Values.tls.secretName }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

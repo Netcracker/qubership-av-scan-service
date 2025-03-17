@@ -1,0 +1,29 @@
+{{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app.kubernetes.io/component: monitoring
+    {{- include "av-scan-service.labels" . | nindent 4 }}
+  name: av-service-rules
+spec:
+  groups:
+    - name: AntivirusService
+      rules:
+        - alert: FoundViruses
+          annotations:
+            summary: Viruses were detected during scanning
+            description: Antivirus service detected viruses during scanning. See antivirus service logs for details.
+          expr: sum(delta(av_viruses_found_total{namespace="{{ .Release.Namespace }}"}[5m])) != 0
+          labels:
+            severity: warning
+            namespace: {{ .Release.Namespace }}
+        - alert: VirusesDatabaseTooOld
+          annotations:
+            summary: Viruses database is too old
+            description: Viruses database is older than 7 days and requires update. Update database as soon as possible.
+          expr: max(av_database_age_seconds{namespace="{{ .Release.Namespace }}"}) > 604800
+          labels:
+            severity: warning
+            namespace: {{ .Release.Namespace }}
+{{ end }}
