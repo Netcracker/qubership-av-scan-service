@@ -1,17 +1,11 @@
-name: Build and Release Image
+name: Build and Publish Images
 on:
   push:
     branches:
       - 'main'
     tags:
       - '*'
-  workflow_dispatch:
-    inputs:
-      publish:
-        description: "Build and publish images to ghcr.io"
-        type: boolean
-        default: false
-        required: false
+  workflow_dispatch: {}
 
 jobs:
   validate:
