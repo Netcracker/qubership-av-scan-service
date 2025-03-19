@@ -17,7 +17,9 @@ To update third-parties, consider following:
 
 To make release, do following:
 1. Decide on a new version, e.g.  `0.6.2`
-2. Manually update [`appVersion` in `Chart.yaml`](/charts/resource-reporter/Chart.yaml)
-3. Create tag `0.6.2`
+2. Create release branch, e.g. `0.6.2_branch`
+3. Manually update [`appVersion` in `Chart.yaml`](/charts/av-scan-service/Chart.yaml)
+4. Manually update tag for [`avScanService.image` in `values.yaml`](/charts/av-scan-service/values.yaml)
+5. Create tag `0.6.2`
 
 **Note:** use your own applicable version instead of `0.6.2`
