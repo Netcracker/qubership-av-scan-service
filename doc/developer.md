@@ -3,7 +3,7 @@
 ## How to update third-parties
 
 To update third-parties, consider following:
-1. Update base images in [`Dockerfile`](/Dockerfile). New versions could be found on docker hub:
+1. Update base images in [`Dockerfile`](/build/Dockerfile). New versions could be found on docker hub:
     * https://hub.docker.com/_/alpine
     * https://hub.docker.com/_/golang
 2. Update go libraries. For this, in repository root, run following:
