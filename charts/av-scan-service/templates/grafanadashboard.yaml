@@ -1,0 +1,12 @@
+{{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" -}}
+apiVersion: integreatly.org/v1alpha1
+kind: GrafanaDashboard
+metadata:
+  name: av-scan-service-dashboard
+  labels:
+    app.kubernetes.io/component: monitoring
+    {{- include "av-scan-service.labels" . | nindent 4 }}
+spec:
+  json: >
+{{ .Files.Get "monitoring/av-scan-service-dashboard.json" | indent 4 }}
+{{- end }}

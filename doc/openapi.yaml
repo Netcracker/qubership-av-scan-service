@@ -1,0 +1,118 @@
+---
+openapi: 3.0.3
+info:
+  title: Antivirus Scan Service
+  version: "1.0"
+tags:
+  - name: ScanService
+paths:
+  /api/v1/scan:
+    post:
+      tags:
+        - ScanService
+      operationId: scan
+      summary: Scan files for viruses
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              description: "A standard multipart/form-data body content, should contain files only"
+              example: |-
+                -----------------------------735323031399963166993862150
+                Content-Disposition: form-data; name="file1"; filename="a.txt"
+                Content-Type: text/plain
+
+                Content of a.txt.
+                -----------------------------735323031399963166993862150
+      responses:
+        "200":
+          description: Scanning completed successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScanStatus'
+        default:
+          description: Scanning failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /health:
+    get:
+      tags:
+        - ScanService
+      operationId: health
+      summary: Check service health
+      responses:
+        "200":
+          description: Health check completed successfully
+        default:
+          description: Health check failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /metrics:
+    get:
+      tags:
+        - ScanService
+      operationId: metrics
+      summary: Collect metrics
+      responses:
+        "200":
+          description: Metrics collected successfully
+          content:
+            text/plain:
+              example: |-
+                ...
+                # HELP process_open_fds Number of open file descriptors.
+                # TYPE process_open_fds gauge
+                process_open_fds 9
+                ...
+              schema:
+                type: string
+        default:
+          description: Failed to collect metrics
+components:
+  schemas:
+    ScanStatus:
+      description: "ScanStatus is a type representing a single file scan status"
+      type: object
+      properties:
+        filename:
+          description: "The name of the file which was checked"
+          type: string
+        infected:
+          description: "Infected is set to true if virus is found"
+          type: boolean
+        virus:
+          description: "A string representing found virus, set only if Infected"
+          type: string
+      example:
+        - filename: "a.txt"
+          infected: true
+          virus: "Win.Test.EICAR_HDB-1"
+    APIError:
+      description: "APIError is a type used to return errors to external users"
+      type: object
+      properties:
+        code:
+          description: "Code is an error code specific for application in format AV-NNNN, e.g. AV-1234"
+          type: string
+        status:
+          description: "HTTP status code related to this API error"
+          type: integer
+        reason:
+          description: "Reason is a static error title/description"
+          type: string
+        details:
+          description: "Details is a dynamic part of error containing error details, may be empty"
+          type: string
+      example:
+        code: "AV-7100"
+        status: 500
+        reason: "clamd ping error"
+        details: "dial tcp 127.0.0.1:3310: connect: connection refused"

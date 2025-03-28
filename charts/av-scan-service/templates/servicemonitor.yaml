@@ -1,0 +1,26 @@
+{{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: av-service-monitor
+  labels:
+    app.kubernetes.io/component: monitoring
+    {{- include "av-scan-service.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - interval: 30s
+      path: /metrics
+      port: http
+      scheme: {{ ternary "https" "http" .Values.tls.enabled }}
+      {{- if .Values.tls.enabled }}
+      tlsConfig:
+        insecureSkipVerify: true
+      {{- end }}
+  jobLabel: k8s-app
+  selector:
+    matchLabels:
+      {{- include "av-scan-service.labels" . | nindent 6 }}
+      {{- with .Values.podLabels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+{{ end }}

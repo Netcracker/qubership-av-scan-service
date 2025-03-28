@@ -1,0 +1,107 @@
+replicaCount: 1
+
+# Allows to enable and configure HPA
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: ""
+  behavior: {}
+
+avScanService:
+  image: ghcr.io/netcracker/qubership-av-scan-service:main
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+    limits:
+      memory: 200Mi
+  livenessProbe:
+    initialDelaySeconds: 60
+    timeoutSeconds: 3
+    httpGet:
+      path: /health
+      port: http
+  readinessProbe:
+    timeoutSeconds: 3
+    httpGet:
+      path: /health
+      port: http
+  
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop: [ "ALL" ]
+    # runAsUser: 100 - for kubernetes only
+
+# ClamAV configuration, used to perform actual scanning for viruses.
+clamav:
+  image: clamav/clamav:1.4.1-13
+  # Private mirror URL. If not provided, DB updates are not enabled.
+  privateMirror: ""
+  # With this option you can provide custom sources for database files.
+  # Works only if privateMirror is set.
+  databaseCustomURL: []
+  # Number of DB mirror "check for updates" per-day.
+  checks: 24
+  # Resources used by clamd daemon.
+  # Should be at least 3Gb if DB updates are enabled.
+  resources:
+    requests:
+      cpu: 500m
+      memory: 3Gi
+    limits:
+      memory: 3Gi
+  readinessProbe:
+    timeoutSeconds: 3
+    tcpSocket:
+      port: 3310
+  livenessProbe:
+    timeoutSeconds: 3
+    tcpSocket:
+      port: 3310
+    initialDelaySeconds: 60
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+    capabilities:
+      drop: [ "ALL" ]
+    # runAsUser: 100 - for kubernetes only
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+
+podAnnotations: {}
+podLabels: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+global: {}
+
+tls:
+  enabled: false
+  secretName: av-scan-service-tls
+  crt: ""
+  key: ""
+  ca: ""
+  generateCerts:
+    enabled: false
+    executor: cert-manager        # cert-manager or openshift
+    clusterIssuerName: ""         # for cert-manager
+    duration: 365                 # for cert-manager
+    subjectAlternativeName:       # for cert-manager
+      additionalDnsNames: []      # for cert-manager
+      additionalIpAddresses: []   # for cert-manager
