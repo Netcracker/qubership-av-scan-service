@@ -87,6 +87,19 @@ nodeSelector: {}
 
 tolerations: []
 
+# A Kubernetes Affinity, if required. 
+# For more information, see https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+#
+# For example:
+#   affinity:
+#     nodeAffinity:
+#      requiredDuringSchedulingIgnoredDuringExecution:
+#        nodeSelectorTerms:
+#        - matchExpressions:
+#          - key: foo.bar.com/role
+#            operator: In
+#            values:
+#            - worker
 affinity: {}
 
 global: {}
