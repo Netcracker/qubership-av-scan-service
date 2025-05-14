@@ -1,3 +1,12 @@
+- [Installation](#installation)
+  - [Chart Configuration](#chart-configuration)
+    - [Tls in AV](#tls-in-av)
+      - [Manually Created tls certificates](#manually-created-tls-certificates)
+      - [Existed tls secret](#existed-tls-secret)
+      - [Cert-manager integration](#cert-manager-integration)
+      - [Openshift integration](#openshift-integration)
+  - [Grafana dashboard](#grafana-dashboard)
+
 # Installation
 
 You can install the Antivirus Scan Service (AV) using `helm` tool. For this case, you can find the chart in the [`charts`](/charts) directory.
