@@ -168,3 +168,11 @@ tls:
         executor: openshift
         enabled: true
 ```
+
+## Grafana dashboard
+
+AV chart installs grafana dashboard if there is `monitoring.coreos.com/v1` API on the cluster.
+
+This dashboard has following information:
+* HTTP statistics
+* Viruses statistics, including number of found viruses and viruses database age
