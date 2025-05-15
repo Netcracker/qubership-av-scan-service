@@ -10,7 +10,7 @@ autoscaling:
   behavior: {}
 
 avScanService:
-  image: ghcr.io/netcracker/qubership-av-scan-service:main
+  image: ghcr.io/netcracker/qubership-av-scan-service:v0.8.0
   resources:
     requests:
       cpu: 100m
