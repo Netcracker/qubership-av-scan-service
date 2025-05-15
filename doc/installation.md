@@ -1,11 +1,15 @@
+This manual provides information on installation of Antivirus Scan Service.
+
+The following topics are covered:
+
 - [Installation](#installation)
   - [Chart Configuration](#chart-configuration)
     - [Tls in AV](#tls-in-av)
-      - [Manually Created tls certificates](#manually-created-tls-certificates)
-      - [Existed tls secret](#existed-tls-secret)
-      - [Cert-manager integration](#cert-manager-integration)
-      - [Openshift integration](#openshift-integration)
-  - [Grafana dashboard](#grafana-dashboard)
+      - [Manually Created tls Certificates](#manually-created-tls-certificates)
+      - [Existed tls Secret](#existed-tls-secret)
+      - [Cert-manager Integration](#cert-manager-integration)
+      - [Openshift Integration](#openshift-integration)
+  - [Grafana Dashboard](#grafana-dashboard)
 
 # Installation
 
@@ -16,20 +20,20 @@ You can install the Antivirus Scan Service (AV) using `helm` tool. For this case
     ```
     where `av` - modifiable name of helm release.
 
-All available parameters are available in the [`values.yaml`](/charts/av-scan-service/values.yaml) file.
+All available parameters are available in the [values.yaml](/charts/av-scan-service/values.yaml) file.
 
 Helm chart creates AV deployment and service. Then you can use the service to access the [Antivirus API](/doc/openapi.yaml).
 
 ## Chart Configuration
 
 It is possible to pass additional configuration to AV chart.
-For the full list of supported options and their defaults, see [`values.yaml`](/charts/av-scan-service/values.yaml).
+For the full list of supported options and their defaults, see [values.yaml](/charts/av-scan-service/values.yaml).
 
 ### Tls in AV
 
 AV API can be configured with tls. It can be done manually or using cert-manager/openshift integration. The steps for every possible approach are provided below.
 
-#### Manually Created tls certificates
+#### Manually Created tls Certificates
 
 1. Create configuration file for SSL certificate:  
 
@@ -103,7 +107,7 @@ tls:
 
 **Important**: AV scan service handles changes in provided certificate, so if it is changed, AV-scan-service applies the new certificate and continue working with it (without restarts). But if provided certificate is wrong, for example, has extra symbols, AV scan service **do not fail** and continue work with old certificate, until further update.
 
-#### Existed tls secret
+#### Existed tls Secret
 
 **Prerequisites:**
 av-scan-service namespace contains the secret with certificates via:
@@ -135,7 +139,7 @@ tls:
 
 **Important**: AV scan service handles changes in the provided certificate. Hence, if it is changed, AV-scan-service applies new certificate and continue working with it (without restarts). But if the provided certificate is wrong, for example, has extra symbols, AV scan service **do not fail** and continue work with old certificate, until further update.
 
-#### Cert-manager integration
+#### Cert-manager Integration
 
 **Prerequisites**:
 
@@ -162,7 +166,7 @@ tls:
         enabled: true
 ```
 
-#### Openshift integration
+#### Openshift Integration
 
 **Prerequisites**:
 
@@ -178,10 +182,10 @@ tls:
         enabled: true
 ```
 
-## Grafana dashboard
+## Grafana Dashboard
 
-AV chart installs grafana dashboard if there is `monitoring.coreos.com/v1` API on the cluster.
+AV chart installs grafana dashboard, if there is `monitoring.coreos.com/v1` API on the cluster.
 
 This dashboard has following information:
 * HTTP statistics
-* Viruses statistics, including number of found viruses and viruses database age
+* Viruses statistics, including number of found viruses, and viruses database age
