@@ -33,6 +33,8 @@ For the full list of supported options and their defaults, see [values.yaml](/ch
 
 AV API can be configured with tls. It can be done manually or using cert-manager/openshift integration. The steps for every possible approach are provided below.
 
+**Note:** if TLS is enabled, av-scan-service Service accepts HTTPS traffic on port 443, instead of port 80.
+
 #### Manually Created tls Certificates
 
 1. Create configuration file for SSL certificate:  

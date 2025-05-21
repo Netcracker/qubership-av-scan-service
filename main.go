@@ -103,17 +103,15 @@ func Run(cmd *cobra.Command, args []string) {
 
 	// run http server
 	r := router.NewRouter(clamav.NewClamD(), logger)
-	srv := &http.Server{Handler: r, Addr: "0.0.0.0:8080"}
-
 	var gr run.Group
 	gr.Add(run.SignalHandler(context.Background(), os.Interrupt, syscall.SIGINT, syscall.SIGTERM))
-
 	if tlsEnabled {
 		watcher, err := certwatcher.New(certFile, keyFile, logger)
 		if err != nil {
 			logger.Error("error creating certificate watcher", "error", err)
 			os.Exit(1)
 		}
+		srv := &http.Server{Handler: r, Addr: "0.0.0.0:8443"}
 		srv.TLSConfig = &tls.Config{
 			GetCertificate: watcher.GetCertificate,
 		}
@@ -136,6 +134,7 @@ func Run(cmd *cobra.Command, args []string) {
 			ShutdownServer(srv, logger, err)
 		})
 	} else {
+		srv := &http.Server{Handler: r, Addr: "0.0.0.0:8080"}
 		gr.Add(func() error {
 			err := srv.ListenAndServe()
 			if err == http.ErrServerClosed {
