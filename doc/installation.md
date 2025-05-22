@@ -26,14 +26,14 @@ Helm chart creates AV deployment and service. Then you can use the service to ac
 
 ## Chart Configuration
 
-It is possible to pass additional configuration to AV chart.
+It is possible to pass the additional configuration to AV chart.
 For the full list of supported options and their defaults, see [values.yaml](/charts/av-scan-service/values.yaml).
 
 ### Tls in AV
 
-AV API can be configured with tls. It can be done manually or using cert-manager/openshift integration. The steps for every possible approach are provided below.
+You can configure AV API with tls manually or using cert-manager/openshift integration. The steps for every possible approach are provided below.
 
-**Note:** if TLS is enabled, av-scan-service Service accepts HTTPS traffic on port 443, instead of port 80.
+**Note**: If TLS is enabled, AV-scan-service accepts HTTPS traffic on port 443, instead of port 80.
 
 #### Manually Created tls Certificates
 
@@ -67,7 +67,7 @@ Where:
 * `AV_SCAN_SERVICE_FULL_NAME` is a full name of av-scan-cervice. Default value is `<helm release name>-av-scan-service` (can be overriden with `fullnameOverride` helm parameter);
 * `AV_SCAN_SERVICE_NAMESPACE` is a namespace, where av-scan-cervice should be installed;
 
-**Note**: Do not forget to specify any other IP addresses and DNS names that you plan to use to connect to the av-scan-cervice. For this, specify the additional `DNS.#` and `IP.#` fields.
+**Note**: Do not forget to specify any other IP addresses and DNS names that you plan to use to connect to the av-scan-service. For this, specify the additional `DNS.#` and `IP.#` fields.
 
 2. Create the CA certificate:
 
@@ -107,7 +107,7 @@ tls:
         -----END RSA PRIVATE KEY-----
 ```
 
-**Important**: AV scan service handles changes in provided certificate, so if it is changed, AV-scan-service applies the new certificate and continue working with it (without restarts). But if provided certificate is wrong, for example, has extra symbols, AV scan service **do not fail** and continue work with old certificate, until further update.
+**Important**: AV scan service handles changes in provided certificate. As a result, if it is changed, AV-scan-service applies the new certificate and continue working with it (without restarts). But if provided certificate is wrong, for example, has extra symbols, AV scan service **do not fail** and continue work with old certificate, until further update.
 
 #### Existed tls Secret
 
@@ -143,11 +143,13 @@ tls:
 
 #### Cert-manager Integration
 
+The information on Cert-manager inetgration is specified below.
+
 **Prerequisites**:
 
 * Cert-manager is installed in your cluster;
 
-**Deploy parameters**:
+**Deploy Parameters**:
 
 ```yaml
 tls:
@@ -174,7 +176,7 @@ tls:
 
 * Deploy on openshift cluster;
 
-**Deploy parameters**:
+**Deploy Parameters**:
 
 ```yaml
 tls:
@@ -189,5 +191,6 @@ tls:
 AV chart installs grafana dashboard, if there is `monitoring.coreos.com/v1` API on the cluster.
 
 This dashboard has following information:
+
 * HTTP statistics
 * Viruses statistics, including number of found viruses, and viruses database age
