@@ -54,7 +54,11 @@ spec:
             {{- toYaml .Values.avScanService.resources | nindent 12 }}
           ports:
             - name: http
+              {{- if .Values.tls.enabled }}
+              containerPort: 8443
+              {{- else }}
               containerPort: 8080
+              {{- end }}
               protocol: TCP
           {{- if .Values.avScanService.livenessProbe }}
           livenessProbe: {{ include "av-scan-service.livenessProbe" . | nindent 12 }}
