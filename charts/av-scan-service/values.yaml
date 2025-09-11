@@ -22,12 +22,10 @@ avScanService:
     timeoutSeconds: 3
     httpGet:
       path: /health
-      port: http
   readinessProbe:
     timeoutSeconds: 3
     httpGet:
       path: /health
-      port: http
   
   securityContext:
     allowPrivilegeEscalation: false

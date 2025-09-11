@@ -75,6 +75,13 @@ httpGet:
 {{- if not .Values.avScanService.livenessProbe.httpGet.scheme }}
   scheme: {{ ternary "HTTPS" "HTTP" .Values.tls.enabled }}
 {{- end }}
+{{- if not .Values.avScanService.livenessProbe.httpGet.port }}
+{{- if .Values.tls.enabled }}
+  port: https
+{{- else }}
+  port: http
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 
@@ -88,6 +95,13 @@ httpGet:
 {{ toYaml .Values.avScanService.readinessProbe.httpGet | indent 2 }}
 {{- if not .Values.avScanService.readinessProbe.httpGet.scheme }}
   scheme: {{ ternary "HTTPS" "HTTP" .Values.tls.enabled }}
+{{- end }}
+{{- if not .Values.avScanService.livenessProbe.httpGet.port }}
+{{- if .Values.tls.enabled }}
+  port: https
+{{- else }}
+  port: http
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
