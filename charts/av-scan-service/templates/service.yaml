@@ -13,13 +13,16 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
+    {{- if .Values.tls.enabled }}
+    - targetPort: https
+      protocol: TCP
+      name: https
+      port: 443
+    {{- else }}
     - targetPort: http
       protocol: TCP
       name: http
-      {{- if .Values.tls.enabled }}
-      port: 443
-      {{- else }}
       port: 80
-      {{- end }}
+    {{- end }}
   selector:
     {{- include "av-scan-service.selectorLabels" . | nindent 4 }}

@@ -10,12 +10,14 @@ spec:
   endpoints:
     - interval: 30s
       path: /metrics
-      port: http
-      scheme: {{ ternary "https" "http" .Values.tls.enabled }}
       {{- if .Values.tls.enabled }}
       tlsConfig:
         insecureSkipVerify: true
+      port: https
+      {{- else }}
+      port: http
       {{- end }}
+      scheme: {{ ternary "https" "http" .Values.tls.enabled }}
   jobLabel: k8s-app
   selector:
     matchLabels:
