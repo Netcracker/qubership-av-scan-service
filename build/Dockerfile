@@ -7,7 +7,7 @@ RUN go build -o av-scan-service .
 
 FROM alpine:3.21
 
-RUN apk update && apk upgrade && apk add --no-cache clamav
+RUN apk update && apk upgrade
 
 COPY --from=builder /go/src/av-scan-service/av-scan-service /av-scan-service
 
