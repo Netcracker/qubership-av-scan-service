@@ -38,7 +38,7 @@ avScanService:
 
 # ClamAV configuration, used to perform actual scanning for viruses.
 clamav:
-  image: clamav/clamav:1.4.1-13
+  image: clamav/clamav:1.5
   # Private mirror URL. If not provided, DB updates are not enabled.
   privateMirror: ""
   # With this option you can provide custom sources for database files.
