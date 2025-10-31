@@ -28,7 +28,7 @@ jobs:
       - name: Publish av-scan-service to ghcr.io
         run: |
           GHCRIO_TAG=$(echo "${{ github.ref_name }}" | sed 's/\//_/g')
-          GHCRIO_IMAGE=ghcr.io/netcracker/qubership-av-scan-service:$GHCRIO_TAG
+          GHCRIO_IMAGE=ghcr.io/${{ github.repository_owner }}/qubership-av-scan-service:$GHCRIO_TAG
           
           docker tag av-scan-service $GHCRIO_IMAGE
           
@@ -51,7 +51,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags') || github.ref_name == 'main' || inputs.publish
         run: |
           GHCRIO_TAG=$(echo "${{ github.ref_name }}" | sed 's/\//_/g')
-          GHCRIO_IMAGE=ghcr.io/netcracker/qubership-av-scan-service-transfer:$GHCRIO_TAG
+          GHCRIO_IMAGE=ghcr.io/${{ github.repository_owner }}/qubership-av-scan-service-transfer:$GHCRIO_TAG
           
           docker tag av-scan-service-transfer $GHCRIO_IMAGE
           
