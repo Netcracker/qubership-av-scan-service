@@ -1,4 +1,4 @@
-FROM golang:1.23.12-alpine3.21 AS builder
+FROM golang:1.24.9-alpine3.21 AS builder
 
 WORKDIR /go/src/av-scan-service
 COPY go.mod go.sum main.go ./
