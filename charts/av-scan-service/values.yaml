@@ -10,7 +10,7 @@ autoscaling:
   behavior: {}
 
 avScanService:
-  image: ghcr.io/saurabh0922/qubership-av-scan-service:CPSEC-1529
+  image: ghcr.io/netcracker/qubership-av-scan-service:main
   resources:
     requests:
       cpu: 100m
