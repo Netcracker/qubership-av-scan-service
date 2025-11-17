@@ -21,27 +21,33 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+
     spec:
       {{- if .Values.clamav.privateMirror }}
       initContainers:
         - name: freshclam-init-db
           securityContext:
-            {{- include "clamav.securityContext" . | nindent 8 }}
+            {{- include "clamav.securityContext" . | nindent 12 }}
           image: {{ include "clamav.image" . }}
           command: ["freshclam"]
           imagePullPolicy: Always
           resources:
             {{- toYaml .Values.clamav.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /etc/clamav
-              name: config-volume
-            - mountPath: /var/lib/clamav/
-              name: db-volume
+            - name: config-volume
+              mountPath: /etc/clamav/clamd.conf
+              subPath: clamd.conf
+            - name: config-volume
+              mountPath: /etc/clamav/freshclam.conf
+              subPath: freshclam.conf
+            - name: db-volume
+              mountPath: /var/lib/clamav/
       {{- end }}
+
       containers:
         - name: av-scan-service
           securityContext:
-            {{- include "avScanService.securityContext" . | nindent 6 }}
+            {{- include "avScanService.securityContext" . | nindent 12 }}
           command:
             - ./av-scan-service
             {{- if .Values.tls.enabled }}
@@ -62,20 +68,23 @@ spec:
             {{- end }}
               protocol: TCP
           {{- if .Values.avScanService.livenessProbe }}
-          livenessProbe: {{ include "av-scan-service.livenessProbe" . | nindent 12 }}
+          livenessProbe:
+            {{ include "av-scan-service.livenessProbe" . | nindent 12 }}
           {{- end }}
           {{- if .Values.avScanService.readinessProbe }}
-          readinessProbe: {{ include "av-scan-service.readinessProbe" . | nindent 12 }}
+          readinessProbe:
+            {{ include "av-scan-service.readinessProbe" . | nindent 12 }}
           {{- end }}
           volumeMounts:
             {{- if .Values.tls.enabled }}
-            - readOnly: true
+            - name: av-scan-service-tls
               mountPath: /certs
-              name: av-scan-service-tls
+              readOnly: true
             {{- end }}
+
         - name: clamd
           securityContext:
-            {{- include "clamav.securityContext" . | nindent 6 }}
+            {{- include "clamav.securityContext" . | nindent 12 }}
           command:
             - /bin/sh
             - -c
@@ -92,32 +101,40 @@ spec:
           resources:
             {{- toYaml .Values.clamav.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /etc/clamav
-              name: config-volume
+            - name: config-volume
+              mountPath: /etc/clamav/clamd.conf
+              subPath: clamd.conf
             {{- if .Values.clamav.privateMirror }}
-            - mountPath: /var/lib/clamav/
-              name: db-volume
+            - name: config-volume
+              mountPath: /etc/clamav/freshclam.conf
+              subPath: freshclam.conf
+            - name: db-volume
+              mountPath: /var/lib/clamav/
             {{- end }}
           {{- if .Values.clamav.livenessProbe }}
-          livenessProbe: {{ toYaml .Values.clamav.livenessProbe | nindent 12 }}
+          livenessProbe:
+            {{ toYaml .Values.clamav.livenessProbe | nindent 12 }}
           {{- end }}
           {{- if .Values.clamav.readinessProbe }}
-          readinessProbe: {{ toYaml .Values.clamav.readinessProbe | nindent 12 }}
+          readinessProbe:
+            {{ toYaml .Values.clamav.readinessProbe | nindent 12 }}
           {{- end }}
+
       volumes:
-      - name: config-volume
-        configMap:
-          name: clamav-config
-      {{- if .Values.clamav.privateMirror }}
-      - name: db-volume
-        emptyDir:
-          sizeLimit: 500Mi
-      {{- end }}
-      {{- if .Values.tls.enabled }}
-      - name: av-scan-service-tls
-        secret:
-          secretName: {{ .Values.tls.secretName }}
-      {{- end }}
+        - name: config-volume
+          configMap:
+            name: clamav-config
+        {{- if .Values.clamav.privateMirror }}
+        - name: db-volume
+          emptyDir:
+            sizeLimit: 500Mi
+        {{- end }}
+        {{- if .Values.tls.enabled }}
+        - name: av-scan-service-tls
+          secret:
+            secretName: {{ .Values.tls.secretName }}
+        {{- end }}
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
