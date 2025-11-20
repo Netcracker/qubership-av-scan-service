@@ -124,7 +124,8 @@ spec:
 
       volumes:
         - name: clamav-certs
-          emptyDir: { }
+          secret:
+            secretName: clamav-certs
         - name: config-volume
           configMap:
             name: clamav-config
