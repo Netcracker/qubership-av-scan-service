@@ -101,6 +101,8 @@ spec:
           resources:
             {{- toYaml .Values.clamav.resources | nindent 12 }}
           volumeMounts:
+            - name: clamav-certs
+              mountPath: /etc/clamav/certs
             - name: config-volume
               mountPath: /etc/clamav/clamd.conf
               subPath: clamd.conf
@@ -121,6 +123,8 @@ spec:
           {{- end }}
 
       volumes:
+        - name: clamav-certs
+          emptyDir: { }
         - name: config-volume
           configMap:
             name: clamav-config
