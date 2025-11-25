@@ -103,6 +103,7 @@ spec:
           volumeMounts:
             - name: clamav-certs
               mountPath: /etc/clamav/certs
+              readOnly: true
             - name: config-volume
               mountPath: /etc/clamav/clamd.conf
               subPath: clamd.conf
@@ -126,6 +127,7 @@ spec:
         - name: clamav-certs
           secret:
             secretName: clamav-certs
+            optional: false
         - name: config-volume
           configMap:
             name: clamav-config
