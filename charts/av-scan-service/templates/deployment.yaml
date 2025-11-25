@@ -90,6 +90,9 @@ spec:
             - -c
             - |
               trap "echo trapped signal, continuing; sleep infinity" SIGTERM SIGINT
+              {{- if .Values.clamav.certs.enabled }}
+              mkdir -p /etc/clamav/certs
+              {{- end }}
               {{- if .Values.clamav.privateMirror }}
               (clamd; echo "CLAMD EXITED") &
               freshclam -d --stdout --foreground=true
@@ -101,9 +104,11 @@ spec:
           resources:
             {{- toYaml .Values.clamav.resources | nindent 12 }}
           volumeMounts:
+            {{- if .Values.clamav.certs.enabled }}
             - name: clamav-certs
               mountPath: /etc/clamav/certs
               readOnly: true
+            {{- end }}
             - name: config-volume
               mountPath: /etc/clamav/clamd.conf
               subPath: clamd.conf
@@ -124,10 +129,12 @@ spec:
           {{- end }}
 
       volumes:
+        {{- if .Values.clamav.certs.enabled }}
         - name: clamav-certs
           secret:
             secretName: clamav-certs
             optional: false
+        {{- end }}
         - name: config-volume
           configMap:
             name: clamav-config
