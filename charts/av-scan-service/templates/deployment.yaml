@@ -21,7 +21,6 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-
     spec:
       {{- if .Values.clamav.privateMirror }}
       initContainers:
@@ -90,9 +89,6 @@ spec:
             - -c
             - |
               trap "echo trapped signal, continuing; sleep infinity" SIGTERM SIGINT
-              {{- if .Values.clamav.certs.enabled }}
-              mkdir -p /etc/clamav/certs
-              {{- end }}
               {{- if .Values.clamav.privateMirror }}
               (clamd; echo "CLAMD EXITED") &
               freshclam -d --stdout --foreground=true
