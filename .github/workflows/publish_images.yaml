@@ -43,12 +43,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Archive bare repository
         run: |
-          git clone --bare https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/Netcracker/qubership-av-scan-service
-          zip -r repository.zip qubership-av-scan-service.git
+          git clone --bare https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          zip -r repository.zip $(basename ${{ github.repository }}).git
       - name: Build Docker Image for av-scan-service-transfer
         run: docker build -t av-scan-service-transfer -f build/Dockerfile-transfer --no-cache .
       - name: Publish av-scan-service-transfer to ghcr.io
-        if: startsWith(github.ref, 'refs/tags') || github.ref_name == 'CPSEC-1529' || inputs.publish
+        if: startsWith(github.ref, 'refs/tags') || github.ref_name == 'main' || github.ref_name == 'CPSEC-1529' || github.ref_name == 'cpsec-1529'
         run: |
           GHCRIO_TAG=$(echo "${{ github.ref_name }}" | sed 's/\//_/g')
           GHCRIO_IMAGE=ghcr.io/saurabh0922/qubership-av-scan-service-transfer:$GHCRIO_TAG
