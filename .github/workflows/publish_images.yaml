@@ -48,7 +48,7 @@ jobs:
       - name: Build Docker Image for av-scan-service-transfer
         run: docker build -t av-scan-service-transfer -f build/Dockerfile-transfer --no-cache .
       - name: Publish av-scan-service-transfer to ghcr.io
-        if: startsWith(github.ref, 'refs/tags') || github.ref_name == 'main' || inputs.publish
+        if: startsWith(github.ref, 'refs/tags') || github.ref_name == 'CPSEC-1529' || inputs.publish
         run: |
           GHCRIO_TAG=$(echo "${{ github.ref_name }}" | sed 's/\//_/g')
           GHCRIO_IMAGE=ghcr.io/saurabh0922/qubership-av-scan-service-transfer:$GHCRIO_TAG
