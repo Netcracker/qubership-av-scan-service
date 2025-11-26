@@ -132,7 +132,7 @@ spec:
         {{- if .Values.clamav.certs.enabled }}
         - name: clamav-certs
           secret:
-            secretName: {{ include "av-scan-service.fullname" . }}-clamav-certs
+            secretName: clamav-certs
             optional: false
         {{- end }}
         - name: config-volume
