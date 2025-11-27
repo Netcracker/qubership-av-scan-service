@@ -42,7 +42,6 @@ spec:
             - name: db-volume
               mountPath: /var/lib/clamav/
       {{- end }}
-
       containers:
         - name: av-scan-service
           securityContext:
@@ -67,12 +66,10 @@ spec:
             {{- end }}
               protocol: TCP
           {{- if .Values.avScanService.livenessProbe }}
-          livenessProbe:
-            {{ include "av-scan-service.livenessProbe" . | nindent 12 }}
+          livenessProbe: {{ include "av-scan-service.livenessProbe" . | nindent 12 }}
           {{- end }}
           {{- if .Values.avScanService.readinessProbe }}
-          readinessProbe:
-            {{ include "av-scan-service.readinessProbe" . | nindent 12 }}
+          readinessProbe: {{ include "av-scan-service.readinessProbe" . | nindent 12 }}
           {{- end }}
           volumeMounts:
             {{- if .Values.tls.enabled }}
@@ -80,7 +77,6 @@ spec:
               mountPath: /certs
               readOnly: true
             {{- end }}
-
         - name: clamd
           securityContext:
             {{- include "clamav.securityContext" . | nindent 12 }}
@@ -100,11 +96,6 @@ spec:
           resources:
             {{- toYaml .Values.clamav.resources | nindent 12 }}
           volumeMounts:
-            {{- if .Values.clamav.certs.enabled }}
-            - name: clamav-certs
-              mountPath: /etc/clamav/certs
-              readOnly: true
-            {{- end }}
             - name: config-volume
               mountPath: /etc/clamav/clamd.conf
               subPath: clamd.conf
@@ -116,35 +107,25 @@ spec:
               mountPath: /var/lib/clamav/
             {{- end }}
           {{- if .Values.clamav.livenessProbe }}
-          livenessProbe:
-            {{ toYaml .Values.clamav.livenessProbe | nindent 12 }}
+          livenessProbe: {{ toYaml .Values.clamav.livenessProbe | nindent 12 }}
           {{- end }}
           {{- if .Values.clamav.readinessProbe }}
-          readinessProbe:
-            {{ toYaml .Values.clamav.readinessProbe | nindent 12 }}
+          readinessProbe: {{ toYaml .Values.clamav.readinessProbe | nindent 12 }}
           {{- end }}
-
       volumes:
-        {{- if .Values.clamav.certs.enabled }}
-        - name: clamav-certs
-          secret:
-            secretName: clamav-certs
-            optional: false
-        {{- end }}
-        - name: config-volume
-          configMap:
-            name: clamav-config
-        {{- if .Values.clamav.privateMirror }}
-        - name: db-volume
-          emptyDir:
-            sizeLimit: 500Mi
-        {{- end }}
-        {{- if .Values.tls.enabled }}
-        - name: av-scan-service-tls
-          secret:
-            secretName: {{ .Values.tls.secretName }}
-        {{- end }}
-
+      - name: config-volume
+        configMap:
+          name: clamav-config
+      {{- if .Values.clamav.privateMirror }}
+      - name: db-volume
+        emptyDir:
+          sizeLimit: 500Mi
+      {{- end }}
+      {{- if .Values.tls.enabled }}
+      - name: av-scan-service-tls
+        secret:
+          secretName: {{ .Values.tls.secretName }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
