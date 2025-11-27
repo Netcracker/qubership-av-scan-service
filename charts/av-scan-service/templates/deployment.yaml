@@ -26,22 +26,26 @@ spec:
       initContainers:
         - name: freshclam-init-db
           securityContext:
-            {{- include "clamav.securityContext" . | nindent 8 }}
+            {{- include "clamav.securityContext" . | nindent 12 }}
           image: {{ include "clamav.image" . }}
           command: ["freshclam"]
           imagePullPolicy: Always
           resources:
             {{- toYaml .Values.clamav.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /etc/clamav
-              name: config-volume
-            - mountPath: /var/lib/clamav/
-              name: db-volume
+            - name: config-volume
+              mountPath: /etc/clamav/clamd.conf
+              subPath: clamd.conf
+            - name: config-volume
+              mountPath: /etc/clamav/freshclam.conf
+              subPath: freshclam.conf
+            - name: db-volume
+              mountPath: /var/lib/clamav/
       {{- end }}
       containers:
         - name: av-scan-service
           securityContext:
-            {{- include "avScanService.securityContext" . | nindent 6 }}
+            {{- include "avScanService.securityContext" . | nindent 12 }}
           command:
             - ./av-scan-service
             {{- if .Values.tls.enabled }}
@@ -69,13 +73,13 @@ spec:
           {{- end }}
           volumeMounts:
             {{- if .Values.tls.enabled }}
-            - readOnly: true
+            - name: av-scan-service-tls
               mountPath: /certs
-              name: av-scan-service-tls
+              readOnly: true
             {{- end }}
         - name: clamd
           securityContext:
-            {{- include "clamav.securityContext" . | nindent 6 }}
+            {{- include "clamav.securityContext" . | nindent 12 }}
           command:
             - /bin/sh
             - -c
@@ -92,11 +96,15 @@ spec:
           resources:
             {{- toYaml .Values.clamav.resources | nindent 12 }}
           volumeMounts:
-            - mountPath: /etc/clamav
-              name: config-volume
+            - name: config-volume
+              mountPath: /etc/clamav/clamd.conf
+              subPath: clamd.conf
             {{- if .Values.clamav.privateMirror }}
-            - mountPath: /var/lib/clamav/
-              name: db-volume
+            - name: config-volume
+              mountPath: /etc/clamav/freshclam.conf
+              subPath: freshclam.conf
+            - name: db-volume
+              mountPath: /var/lib/clamav/
             {{- end }}
           {{- if .Values.clamav.livenessProbe }}
           livenessProbe: {{ toYaml .Values.clamav.livenessProbe | nindent 12 }}

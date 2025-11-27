@@ -1,6 +1,6 @@
 module github.com/netcracker/qubership-av-scan-service
 
-go 1.22
+go 1.24
 
 require (
 	github.com/dutchcoders/go-clamd v0.0.0-20170520113014-b970184f4d9e
