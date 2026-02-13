@@ -1,5 +1,11 @@
 replicaCount: 1
 
+# Platform configuration
+# Set to 'kubernetes' to add runAsUser: 100 (required for vanilla Kubernetes)
+# Set to 'openshift' or leave unset to skip runAsUser (OpenShift assigns automatically)
+# Default: openshift
+platform: openshift
+
 # Allows to enable and configure HPA
 autoscaling:
   enabled: false
