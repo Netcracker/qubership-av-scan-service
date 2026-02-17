@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       annotations:
-        qubership.org/platform: {{ .Values.platform | default "openshift" | quote }}
+        qubership.org/platform: {{ include "effectivePlatform" . | quote }}
         {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
