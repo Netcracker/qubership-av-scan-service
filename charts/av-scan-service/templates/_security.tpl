@@ -1,37 +1,12 @@
 {{/*
-Helper to detect if running on OpenShift
-Checks for OpenShift-specific API groups
-Returns "true" or "false"
-*/}}
-{{- define "isOpenShift" -}}
-{{- if or (.Capabilities.APIVersions.Has "security.openshift.io/v1") 
-         (.Capabilities.APIVersions.Has "apps.openshift.io/v1") 
-         (.Capabilities.APIVersions.Has "route.openshift.io/v1") 
-         (.Capabilities.APIVersions.Has "project.openshift.io/v1") 
-         (.Capabilities.APIVersions.Has "image.openshift.io/v1") -}}
-true
-{{- else -}}
-false
-{{- end -}}
-{{- end -}}
-
-{{/*
-Helper to determine the effective platform setting
-Returns "openshift" or "kubernetes" based on:
-1. Manual override (if platform is explicitly set)
-2. Auto-detection (if platform is "auto" or not set)
+Helper to determine the platform
+Reads PAAS_PLATFORM from values (set by deployer via values.schema)
+Converts to lowercase for consistency
+Returns: "openshift" or "kubernetes"
+Default: "openshift" (safe default that works on OpenShift)
 */}}
 {{- define "effectivePlatform" -}}
-{{- if and .Values.platform (ne .Values.platform "auto") -}}
-{{- .Values.platform -}}
-{{- else -}}
-{{- $isOpenShift := include "isOpenShift" . | trim -}}
-{{- if eq $isOpenShift "true" -}}
-openshift
-{{- else -}}
-kubernetes
-{{- end -}}
-{{- end -}}
+{{- .Values.PAAS_PLATFORM | default "OPENSHIFT" | lower -}}
 {{- end -}}
 
 {{/*
