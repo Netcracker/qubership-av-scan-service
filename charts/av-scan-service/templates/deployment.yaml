@@ -12,11 +12,10 @@ spec:
       {{- include "av-scan-service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
       annotations:
-        qubership.org/platform: {{ include "effectivePlatform" . | quote }}
-        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+      {{- end }}
       labels:
         {{- include "av-scan-service.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}

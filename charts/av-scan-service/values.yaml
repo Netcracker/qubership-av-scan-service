@@ -1,11 +1,5 @@
 replicaCount: 1
 
-# Platform configuration
-# This value is automatically injected by the Netcracker Cloud Deployer
-# via values.schema based on the paas_platform parameter.
-# Values: OPENSHIFT or KUBERNETES
-# See values.schema for details.
-
 # Allows to enable and configure HPA
 autoscaling:
   enabled: false
