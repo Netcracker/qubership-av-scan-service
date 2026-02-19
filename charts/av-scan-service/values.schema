@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/av-scan-service.json",
+  "type": "object",
+  "title": "The av-scan-service schema",
+  "description": "JSON Schema for av-scan-service.",
+  "default": {},
+  "required": [],
+  "examples": [
+    {
+      "PAAS_PLATFORM": "KUBERNETES",
+      "NAMESPACE": "",
+      "PAAS_VERSION": "",
+      "SERVICE_NAME": "av-scan-service",
+      "TAG": "",
+      "IMAGE_REPOSITORY": ""
+    }
+  ],
+  "properties": {
+    "PAAS_PLATFORM": {
+      "$id": "#/properties/PAAS_PLATFORM",
+      "type": "string",
+      "title": "The PAAS_PLATFORM scheme",
+      "description": "PaaS Platform.",
+      "default": "KUBERNETES",
+      "examples": [
+        "KUBERNETES",
+        "OPENSHIFT"
+      ],
+      "enum": [
+        "KUBERNETES",
+        "OPENSHIFT"
+      ],
+      "internal": true
+    },
+    "NAMESPACE": {
+      "$id": "#/properties/NAMESPACE",
+      "type": "string",
+      "title": "The NAMESPACE scheme",
+      "description": "The namespace it is going to be deployed.",
+      "internal": true
+    },
+    "PAAS_VERSION": {
+      "$id": "#/properties/PAAS_VERSION",
+      "type": "string",
+      "title": "The PAAS_VERSION schema",
+      "description": "This parameter specify paas where this service is deployed.",
+      "default": "",
+      "internal": true
+    },
+    "SERVICE_NAME": {
+      "$id": "#/properties/SERVICE_NAME",
+      "type": "string",
+      "title": "The SERVICE_NAME scheme",
+      "description": "The name of the service.",
+      "default": "av-scan-service",
+      "internal": true
+    },
+    "TAG": {
+      "$id": "#/properties/TAG",
+      "type": "string",
+      "title": "The TAG scheme",
+      "description": "Docker image tag.",
+      "internal": true
+    },
+    "IMAGE_REPOSITORY": {
+      "$id": "#/properties/IMAGE_REPOSITORY",
+      "type": "string",
+      "title": "The IMAGE_REPOSITORY scheme",
+      "description": "Docker image repository.",
+      "internal": true
+    }
+  }
+}
