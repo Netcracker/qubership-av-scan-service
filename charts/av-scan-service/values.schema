@@ -8,7 +8,7 @@
   "required": [],
   "examples": [
     {
-      "PAAS_PLATFORM": "OPENSHIFT",
+      "PAAS_PLATFORM": "KUBERNETES",
       "NAMESPACE": "",
       "PAAS_VERSION": "",
       "SERVICE_NAME": "av-scan-service",
@@ -22,7 +22,7 @@
       "type": "string",
       "title": "The PAAS_PLATFORM scheme",
       "description": "PaaS Platform.",
-      "default": "OPENSHIFT",
+      "default": "KUBERNETES",
       "examples": [
         "KUBERNETES",
         "OPENSHIFT"
