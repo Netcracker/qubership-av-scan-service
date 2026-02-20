@@ -1,6 +1,7 @@
 # Binaries for programs and plugins
 *.exe
 .vscode
+.idea
 /qubership-av-scan-service
 /av-scan-service
 /env
