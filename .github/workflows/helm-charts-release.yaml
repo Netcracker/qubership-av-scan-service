@@ -9,10 +9,10 @@ on:
         required: true
         type: string
   # Allows testing from a branch before merging to main - workflow appears in Actions tab
-  pull_request:
-    branches: [main]
+  push:
+    branches: [fix/add-helm-charts-release]
 env:
-  # workflow_dispatch: from input; pull_request: from branch name (for testing)
+  # test-0.0.0 for testing; revert when merging to main
   RELEASE_VERSION: test-0.0.0
 permissions:
   contents: write
