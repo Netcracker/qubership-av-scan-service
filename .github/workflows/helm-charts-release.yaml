@@ -12,12 +12,12 @@ on:
   push:
     branches: [fix/add-helm-charts-release]
 env:
-  # test-0.0.0 for testing; revert when merging to main
-  RELEASE_VERSION: test-0.0.0
+  # 0.0.0-test for testing; revert when merging to main
+  RELEASE_VERSION: 0.0.0-test
 permissions:
   contents: write
   packages: write
-run-name: ${{ github.repository }} Release test-0.0.0
+run-name: ${{ github.repository }} Release 0.0.0-test
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
