@@ -17,7 +17,7 @@ env:
 permissions:
   contents: write
   packages: write
-run-name: ${{ github.repository }} Release ${{ env.RELEASE_VERSION }}
+run-name: ${{ github.repository }} Release ${{ github.event.inputs.release || github.event.pull_request.head.ref || 'test-0.0.0' }}
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
