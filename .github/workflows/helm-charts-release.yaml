@@ -13,11 +13,11 @@ on:
     branches: [main]
 env:
   # workflow_dispatch: from input; pull_request: from branch name (for testing)
-  RELEASE_VERSION: ${{ github.event.inputs.release || github.event.pull_request.head.ref || 'test-0.0.0' }}
+  RELEASE_VERSION: test-0.0.0
 permissions:
   contents: write
   packages: write
-run-name: ${{ github.repository }} Release ${{ github.event.inputs.release || github.event.pull_request.head.ref || 'test-0.0.0' }}
+run-name: ${{ github.repository }} Release test-0.0.0
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
