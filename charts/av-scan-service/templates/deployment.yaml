@@ -6,7 +6,11 @@ metadata:
     app.kubernetes.io/component: backend
     {{- include "av-scan-service.labels" . | nindent 4 }}
 spec:
+  {{- if .Values.REPLICAS }}
+  replicas: {{ .Values.REPLICAS }}
+  {{- else}}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "av-scan-service.selectorLabels" . | nindent 6 }}
@@ -55,7 +59,15 @@ spec:
           image: {{ include "antivirus.image" . }}
           imagePullPolicy: Always
           resources:
-            {{- toYaml .Values.avScanService.resources | nindent 12 }}
+            {{- if .Values.MEMORY_LIMIT }}
+            requests:
+              cpu: {{ .Values.CPU_REQUEST | quote }}
+              memory: {{ .Values.MEMORY_REQUEST | quote }}
+            limits:
+              memory: {{ .Values.MEMORY_LIMIT | quote }}
+            {{- else }}
+              {{- toYaml .Values.avScanService.resources | nindent 12 }}
+            {{- end }}
           ports:
             {{- if .Values.tls.enabled }}
             - name: https
