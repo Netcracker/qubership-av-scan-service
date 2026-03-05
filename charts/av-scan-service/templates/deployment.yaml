@@ -6,7 +6,11 @@ metadata:
     app.kubernetes.io/component: backend
     {{- include "av-scan-service.labels" . | nindent 4 }}
 spec:
+  {{- if .Values.REPLICAS }}
+  replicas: {{ .Values.REPLICAS }}
+  {{- else}}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "av-scan-service.selectorLabels" . | nindent 6 }}
