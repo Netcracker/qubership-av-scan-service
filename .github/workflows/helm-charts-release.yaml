@@ -87,7 +87,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
   chart-release-prepare:
-    needs: [check-tag, load-docker-build-components, docker-check-build]
+    needs: [load-docker-build-components, docker-check-build]
     runs-on: ubuntu-latest
     outputs:
       images-versions: ${{ steps.update-versions.outputs.images-versions }}
