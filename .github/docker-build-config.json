@@ -1,0 +1,15 @@
+{
+  "components": [
+    {
+      "name": "qubership-av-scan-service",
+      "file": "build/Dockerfile",
+      "context": "."
+    },
+    {
+      "name": "qubership-av-scan-service-transfer",
+      "file": "build/Dockerfile-transfer",
+      "context": "."
+    }
+  ],
+  "platforms": "linux/amd64,linux/arm64"
+}
