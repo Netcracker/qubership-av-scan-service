@@ -1,0 +1,9 @@
+---
+
+charts:
+  - name: qubership-av-scan-service
+    chart_file: charts/av-scan-service/Chart.yaml
+    values_file: charts/av-scan-service/values.yaml
+    image:
+      - ghcr.io/netcracker/qubership-av-scan-service-transfer:${release}
+      - ghcr.io/netcracker/qubership-av-scan-service:${release}
