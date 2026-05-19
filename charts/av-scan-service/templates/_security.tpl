@@ -7,7 +7,8 @@ Template to generate av-scan-service Pod SecurityContext
   {{- end }}
   {{- if eq .Values.PAAS_PLATFORM "KUBERNETES" }}
     {{- if not .Values.avScanService.securityContext.runAsUser }}
-      runAsUser: 100
+      runAsUser: 10001
+      runAsGroup: 10001
     {{- end }}
   {{- end }}
 {{- end -}}
