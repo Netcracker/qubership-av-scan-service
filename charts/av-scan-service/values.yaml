@@ -30,14 +30,12 @@ avScanService:
   securityContext:
     allowPrivilegeEscalation: false
     runAsNonRoot: true
-    runAsUser: 10001
-    runAsGroup: 10001
     readOnlyRootFilesystem: true
     seccompProfile:
       type: RuntimeDefault
     capabilities:
       drop: [ "ALL" ]
-    # runAsUser: 100 - for kubernetes only
+    # runAsUser/runAsGroup (10001) are set by the chart when PAAS_PLATFORM=KUBERNETES
 
 # ClamAV configuration, used to perform actual scanning for viruses.
 clamav:
@@ -73,7 +71,7 @@ clamav:
       type: RuntimeDefault
     capabilities:
       drop: [ "ALL" ]
-    # runAsUser: 100 - for kubernetes only
+    # runAsUser (100) is set by the chart when PAAS_PLATFORM=KUBERNETES
 
 nameOverride: ""
 fullnameOverride: ""
