@@ -20,14 +20,14 @@ You can install the Antivirus Scan Service (AV) using `helm` tool. For this case
     ```
     where `av` - modifiable name of helm release.
 
-All available parameters are available in the [values.yaml](/charts/av-scan-service/values.yaml) file.
+All available parameters are available in the [values.yaml](/docs/installation-guide/charts/values.yaml) file.
 
 Helm chart creates AV deployment and service. Then you can use the service to access the [Antivirus API](/doc/openapi.yaml).
 
 ## Chart Configuration
 
 It is possible to pass the additional configuration to AV chart.
-For the full list of supported options and their defaults, see [values.yaml](/charts/av-scan-service/values.yaml).
+For the full list of supported options and their defaults, see [values.yaml](/docs/installation-guide/charts/values.yaml).
 
 ### Tls in AV
 
