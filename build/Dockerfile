@@ -1,11 +1,11 @@
-FROM golang:1.26.3-alpine3.23 AS builder
+FROM golang:1.26.5-alpine3.24 AS builder
 
 WORKDIR /go/src/av-scan-service
 COPY go.mod go.sum main.go ./
 COPY pkg ./pkg/
 RUN go build -o av-scan-service . 
 
-FROM alpine:3.23
+FROM alpine:3.24
 
 RUN apk update && apk upgrade
 
