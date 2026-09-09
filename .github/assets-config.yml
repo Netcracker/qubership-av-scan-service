@@ -1,5 +1,5 @@
 archives:
-  - source: charts
+  - source: helm-templates
     outputName: helm-charts
     archiveType: tar.gz
   - source: docs

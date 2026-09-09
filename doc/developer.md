@@ -11,12 +11,12 @@ To update third-parties, consider following:
     go get -u
     go mod tidy
     ```
-3. Update ClamAV version in [`/charts/av-scan-service/values.yaml`](/charts/av-scan-service/values.yaml).
+3. Update ClamAV version in [`/helm-templates/av-scan-service/values.yaml`](/helm-templates/av-scan-service/values.yaml).
 
 ## How to make release
 
 To make release, do following:
-1. Manually update [`appVersion` in `Chart.yaml`](/charts/av-scan-service/Chart.yaml) if needed
+1. Manually update [`appVersion` in `Chart.yaml`](/helm-templates/av-scan-service/Chart.yaml) if needed
 2. Decide on a new version, e.g. `0.10.1`
 3. Run 'Helm Charts Release' workflow with specified version
 
