@@ -12,4 +12,4 @@ version: 0.10.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 # For av-scan-service, it is the same as the ClamAV version.
-appVersion: "1.5.1-11"
+appVersion: "1.5.4"
